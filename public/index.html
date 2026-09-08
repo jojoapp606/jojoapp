@@ -1,0 +1,11 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>JOJO Juice & Organic</title><link rel="stylesheet" href="/style.css"></head><body>
+<header><img id="logo" src="/logo.jpg"><div><h1 id="shop">JOJO Juice & Organic</h1><p id="tag"></p></div><a href="/admin.html">Owner</a></header>
+<main><section class="hero"><h2>Fresh juices, made with love 🍹</h2><p>Fresh • Organic • Delicious</p></section><section id="products" class="grid"></section><section class="box"><h2>🛒 Your Cart</h2><div id="cart"></div><h3>Total: ₹<span id="total">0</span></h3><button onclick="checkout()">Place Order</button></section></main>
+<script>
+let D,C=[];
+async function load(){D=await fetch("/api/shop").then(r=>r.json());document.body.style.background=D.settings.background;shop.textContent=D.settings.shop_name;tag.textContent=D.settings.tagline;logo.src=D.settings.logo||"/logo.jpg";products.innerHTML=D.products.filter(p=>p.available).map(p=>`<article><img src="${p.image||'https://placehold.co/500x350?text=Juice'}"><h3>${p.name}</h3><p>${p.description}</p><b>₹${p.price}</b><button onclick="add(${p.id})">Add</button></article>`).join("");draw()}
+function add(id){let x=C.find(a=>a.product_id===id);x?x.qty++:C.push({product_id:id,qty:1});draw()}
+function draw(){cart.innerHTML=C.map(x=>{let p=D.products.find(a=>a.id===x.product_id);return `<p>${p.name} × ${x.qty} — ₹${p.price*x.qty}</p>`}).join("")||"<p>Cart empty</p>";total.textContent=C.reduce((a,x)=>a+D.products.find(p=>p.id===x.product_id).price*x.qty,0)}
+async function checkout(){if(!C.length)return alert("Cart empty");let n=prompt("Customer name"),ph=prompt("Mobile number"),ad=prompt("Delivery address");if(!n||!ph||!ad)return;let online=confirm("OK = Cash on Delivery. Cancel = Online payment (gateway can be connected later).");let r=await fetch("/api/orders",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({customer_name:n,phone:ph,address:ad,payment_method:online?"COD":"ONLINE",items:C})});let x=await r.json();if(x.ok){alert("Order #"+x.order_id+" placed. Total ₹"+x.total);C=[];draw()}else alert(x.error)}
+load();
+</script></body></html>

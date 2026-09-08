@@ -1,0 +1,25 @@
+{
+  "settings": {
+    "shop_name": "JOJO Juice & Organic",
+    "tagline": "Fresh • Organic • Delicious",
+    "background": "#ffd9e8",
+    "logo": "/logo.jpg",
+    "delivery_charge": 0
+  },
+  "products": [
+    {
+      "id": 1788849977237,
+      "name": "Mango juice ",
+      "description": "",
+      "price": 70,
+      "image": "",
+      "category": "Fresh Juice",
+      "available": true
+    }
+  ],
+  "orders": [],
+  "admin": {
+    "username": "admin",
+    "passwordHash": "$2a$10$ktO32q/kMMl9OGINlYYjBuzc3N/kR59JHwh2MkICIHw8dS9LKWi9i"
+  }
+}
