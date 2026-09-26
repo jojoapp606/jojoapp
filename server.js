@@ -1,3 +1,18 @@
+app.post("/api/admin/login", (q, s) => {
+    const { username, password } = q.body;
+    // यहाँ अपना मनपसंद यूजरनेम और पासवर्ड डालें
+    if (username === "admin" && password === "jojo1234") {
+        q.session.admin = true;
+        return s.json({ success: true });
+    }
+    s.status(401).json({ error: "गलत क्रेडेंशियल्स" });
+});
+
+// एडमिन पेज को सुरक्षित करने के लिए रीडायरेक्ट रूट
+app.get("/admin", auth, (q, s) => {
+    // अगर एडमिन लॉग इन है, तो उसे एडमिन फ़ाइल भेजें
+    s.sendFile(path.join(__dirname, "public", "admin.html")); 
+});
 const express=require("express"),session=require("express-session"),bcrypt=require("bcryptjs"),multer=require("multer"),fs=require("fs"),path=require("path");
 const app=express(),PORT=3000,DB="data.json";
 const blank={settings:{shop_name:"JOJO Juice & Organic",tagline:"Fresh • Organic • Delicious",background:"#ffd9e8",logo:"/logo.jpg",delivery_charge:0},products:[],orders:[],admin:{username:"admin",passwordHash:bcrypt.hashSync("ChangeMe123!",10)}};
